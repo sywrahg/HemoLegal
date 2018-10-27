@@ -1,0 +1,27 @@
+{% extends './base.html' %}
+{% load static %}
+{% load bootstrap %}
+
+{% block title %}Doacao {{doacao.id}}{% endblock %}
+{% block content %}	
+
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<p><h3>Doacão de nº {{doacao.id}}</h3></p>
+				<p><h4>Realizada em {{doacao.data_doacao}}</h4></p>
+			</div>
+
+			<div class="panel-body">
+				<p>Hemocentro: {{doacao.hemocentro.nome}}</p>
+				<p><a href="{% url 'core:detalhe_doador' doador_id=doacao.doador.pk %}">Doador: {{doacao.doador.nome}}</a></p>
+				<p>Sexo: {{doacao.doador.sexo}}</p>
+				<p>Tipo sanguíneo: {{doacao.doador.sangue}}</p>
+		
+				{% if doacao.direcionada %}			
+					<strong>Direcionada:</strong> {{doacao.paciente}} - {{doacao.hospital.nome}}
+				{% endif %}
+			</div>
+	    </div>
+
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends './base.html' %}
+{% load bootstrap %}
+{% block content %}
+    
+    <h3>Novo Doador</h3>
+    <form method="POST" action='/cadastro_doador/'>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-md-8 mb-6">
+                  <label for="nome">Nome</label>
+                  <input type="text" class="form-control" name="nome" id="nome" placeholder="Name" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="nascimento">Data de nascimento</label>
+                <input type="date" class="form-control" id="nascimento" name="nascimento" placeholder="nascimento" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                  <label for="cpf">CPF</label>
+                  <input type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="telefone">Telefone</label>
+                <input type="text" class="form-control" id="telefone"  name="telefone" placeholder="Telefone" required>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <label for="sexo">Sexo</label>
+                <select name='sexo' class="form-control">
+                    <option>--</option>
+                    <option>Feminino</option>
+                    <option>Masculino</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <label for="tipo_sangue">Tipo Sanguíneo</label>
+                <select name='tipo_sangue' class="form-control">
+                    <option>--</option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-9 mb-6">
+                  <label for="logradouro">Logradouro</label>    
+                  <input type="text" class="form-control" name="logradouro" id="logradouro" placeholder="Logradouro" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="numero">Numero</label>
+                <input type="text" class="form-control" name="numero" id="numero" placeholder="Numero" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                  <label for="bairro">Bairro</label>
+                  <input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="cidade">Cidade</label>
+                <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="estado">Estado</label>
+                <input type="text" class="form-control" id="estado" name="estado" placeholder="Estado" required>
+            </div>
+        </div>
+
+        <button type="submit" name="action" class="btn btn-danger">Cadastrar</button>
+             
+    </form>
+
+    
+    
+    {% if form.subject.errors %}
+    <ol>
+    {% for error in form.subject.errors %}
+        <li><strong>{{ error|escape }}</strong></li>
+    {% endfor %}
+    </ol>
+	{% endif %}
+{% endblock %}

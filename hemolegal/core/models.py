@@ -10,13 +10,14 @@ TIPO_SANGUE = (
 		('abn', 'AB-'),
 		('op', 'O+'),
 		('on', 'O-'),
-	)
+)
 
 class Endereco(models.Model):
 	logradouro = models.CharField(max_length = 50, verbose_name = 'logradouro')
 	numero = models.IntegerField()
-	estado = models.CharField(max_length = 20, verbose_name = 'estado')
-	cidade = models.CharField(max_length = 20, verbose_name = 'cidade')
+	bairro = models.CharField(max_length = 50, verbose_name = 'bairro')
+	estado = models.CharField(max_length = 50, verbose_name = 'estado')
+	cidade = models.CharField(max_length = 50, verbose_name = 'cidade')
 
 class Hospital(models.Model):
 	nome = models.CharField(max_length = 30, verbose_name = 'nome')
@@ -27,26 +28,33 @@ class Hospital(models.Model):
 class Hemocentro(models.Model):
 	nome = models.CharField(max_length = 30, verbose_name = 'nome')
 	telefone = models.CharField(max_length = 14, verbose_name = 'telefone')
-	estoque_sanguineo = models.ForeignKey('Estoque', on_delete = models.CASCADE, related_name = 'meu_Estoque')
+	estoque_sanguineo = models.ForeignKey('Estoque', on_delete = models.CASCADE, related_name = 'meu_estoque')
 	endereco = models.OneToOneField('Endereco', on_delete = models.CASCADE, related_name = 'hemocentro_endereco')
 
 class Doador(models.Model):
 	SEXO = (
-		('F', 'Feminino'),
-		('M', 'Masculino'),
+		('F', u'Feminino'),
+		('M', u'Masculino'),
 	)
 
 	nome = models.CharField(max_length = 30, verbose_name = 'nome')
 	cpf = models.CharField(max_length = 11, verbose_name = 'cpf')
-	sexo = models.CharField(max_length = 1, choices = SEXO)
+	sexo = models.CharField(max_length = 10, choices = SEXO)
 	telefone = models.CharField(max_length = 14, verbose_name = 'telefone')
 	dt_nascimento = models.DateField(auto_now = False)
 	endereco = models.ForeignKey('Endereco', on_delete = models.CASCADE, related_name = 'doador_endereco')
-	tipo_sangue = models.CharField(max_length = 3, choices = TIPO_SANGUE)
+	sangue = models.CharField(max_length = 3, choices = TIPO_SANGUE)
 
 class Estoque(models.Model):
 	tipo_sangue = models.CharField(max_length = 3, choices = TIPO_SANGUE)
 	quant_bolsas = models.IntegerField()
+
+	def checar_estoque():
+		"""checa o número de bolsas e caso o estoque esteja baixo, nao permitir transações. Quantias ideais:
+		considerar as outras como 100
+		O+ >=  250 bolsas
+		O- >= 20 bolsas
+		AB- >= 4"""
 
 
 class Doacao(models.Model):
@@ -57,6 +65,17 @@ class Doacao(models.Model):
 	direcionada = models.BooleanField()
 	paciente = models.CharField(max_length = 30, verbose_name = 'paciente')
 	hospital = models.ForeignKey('Hospital', on_delete = models.CASCADE, related_name = 'doacoes_direcionadas')
+
+	def checar_idade_doador(self):
+		#CHECAR SE O DOADOR É MAIOR DE IDADE, SE NAO FOR DEVE EXIGIR DOCUMENTAÇÃO DE AUTORIZAÇÃO (CADASTRAR UM CODIGO DA AUTORIZACAO).
+		if (datetime.now() - Doacao.objects.filter(doador = self.doador).filter(dt_nascimento)).years > 18:
+			raise ValidationError('Doador necessita da autorização dos responsáveis!!')
+
+	def chegar_intervalo_doacao(self):
+		""" CHECAR O INTERVALO DA ULTIMA DOAÇÃO P/ DOAÇÃO ATUAL:
+			HOMEM: 2 MESES(60 DIAS)
+			MULHERES: 3 MESES(90 DIAS)"""
+			
 
 
 class Transacao(models.Model):

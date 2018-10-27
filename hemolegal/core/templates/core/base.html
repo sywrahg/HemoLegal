@@ -1,0 +1,44 @@
+{% load static %}
+{% load bootstrap %}
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+
+
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+	<link rel="stylesheet" href="{% static "css/style.css" %}" >
+	
+</head>
+
+<body>
+	<div class="container">
+		<header class="row">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+		 		<li class="nav-item"><a class="nav-link active" id="home-tab" data-toggle="tab" href="{% url 'core:home' %}" role="tab" aria-controls="home" aria-selected="true">Home</a>
+		  		</li>
+		  		<li class="nav-item"><a class="nav-link" id="doadores-tab" data-toggle="tab" href="{% url 'core:doadores' %}" role="tab" aria-controls="doadores" aria-selected="false">Doadores</a>
+		  		</li>
+		  		<li class="nav-item"><a class="nav-link" id="campanhas-tab" data-toggle="tab" href="#campanhas" role="tab" aria-controls="campanhas" aria-selected="false">Campanhas</a>
+		  		</li>
+			</ul>
+		</header>	
+
+		<main class="row">
+
+			{% block content %}
+
+			{% endblock %}
+			
+		</main>
+
+		<footer class="row">
+			Todos os Direitos Reservados - HemoLegal - 2018
+		</footer>
+	</div>
+
+</html>
